@@ -1,6 +1,6 @@
 //index.js
 const app = getApp()
-// const cloud = require('wx-server-sdk')
+let indexController = require('../../controllers/index-controller');
 
 Page({
   data: {
@@ -50,6 +50,13 @@ Page({
       })
       return
     }
+    indexController.login('customer', (err, user) => {
+      if (err) console.log(err);
+      else {
+        app.globalData.customer = user;
+        console.log(user);
+      }
+    });
 
     // 获取用户信息
     wx.getSetting({
@@ -91,15 +98,15 @@ Page({
       success: res => {
         console.log('[云函数] [login] user openid: ', res.result.openid)
         app.globalData.openid = res.result.openid
-        wx.navigateTo({
-          url: '../userConsole/userConsole',
-        })
+        // wx.navigateTo({
+        //   url: '../userConsole/userConsole',
+        // })
       },
       fail: err => {
         console.error('[云函数] [login] 调用失败', err)
-        wx.navigateTo({
-          url: '../deployFunctions/deployFunctions',
-        })
+        // wx.navigateTo({
+        //   url: '../deployFunctions/deployFunctions',
+        // })
       }
     })
   },

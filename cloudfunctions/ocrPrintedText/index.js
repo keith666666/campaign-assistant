@@ -80,7 +80,7 @@ exports.main = async (event, context) => {
     let fileURL = await getFileURL(fileID);
     let ocrResult = await parseImage(fileURL);
     let text = await decodeOCRResult(ocrResult);
-    let campaigns = await searchMatchedCampaign(text)
+    let campaigns = await searchMatchedCampaign(text);
     return campaigns;
   } catch (error) {
     console.log('ocr error---');
