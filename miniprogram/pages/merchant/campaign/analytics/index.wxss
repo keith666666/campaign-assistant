@@ -1,1 +1,8 @@
 /* miniprogram/pages/merchant/campaign/analytics/index.wxss */
+.ct_groups{
+  width: 100%;
+}
+.ct_group{
+  display: flex;
+  background: red;
+}

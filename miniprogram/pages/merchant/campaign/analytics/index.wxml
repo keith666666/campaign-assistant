@@ -1,2 +1,24 @@
-<!--miniprogram/pages/merchant/campaign/analytics/index.wxml-->
-<text>miniprogram/pages/merchant/campaign/analytics/index.wxml</text>
+<!-- miniprogram/pages/merchant/campaign/analytics/index.wxml -->
+<view class="container">
+  <view>
+    <label>活动名称</label>
+    <text>{{campaignName}}</text>
+  </view>
+  <view>
+    <label>总参加人数</label>
+    <text>{{total}}</text>
+  </view>
+  <view>折线图</view>
+  <label>时段统计表</label>
+  <view wx:for="{{groupedData}}" class="ct_groups">
+    <view class="ct_group">
+      <label>{{item._id}}</label>
+      <text>{{item.num}}</text>
+    </view>
+  </view>
+  <label>我是列表</label>
+  <view wx:for="{{listData}}">
+    <text>{{item.created}}</text>
+    <text>{{item.customer._openid}}</text>
+  </view>
+</view>
