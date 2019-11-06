@@ -1,6 +1,6 @@
 //index.js
 const app = getApp()
-const cloud = require('wx-server-sdk')
+// const cloud = require('wx-server-sdk')
 
 Page({
   data: {
@@ -155,41 +155,53 @@ Page({
   },
 
   async handleOcr() {
-    const res = await wx.chooseImage({
+    const imageRes = await wx.chooseImage({
       count: 1,
       sizeType: ['compressed'],
-      sourceType: ['camera'],
-    })
-
-    wx.showLoading({
-      title: '上传中',
-    })
-
-    const filePath = res.tempFilePaths[0]
-
-    // 上传图片
-    const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
-    wx.cloud.uploadFile({
-      cloudPath,
-      filePath,
-      success: res => {
-        console.log('[上传文件] 成功：', res)
-
-        app.globalData.fileID = res.fileID
-        app.globalData.cloudPath = cloudPath
-        app.globalData.imagePath = filePath
-
-
-      },
-      fail: e => {
-        console.error('[上传文件] 失败：', e)
-        wx.showToast({
-          icon: 'none',
-          title: '上传失败',
+      sourceType: ['album','camera'],
+      success(res) {
+        wx.showLoading({
+          title: '上传中',
         })
-      },
-      complete: () => {
-        wx.hideLoading()
+
+        console.log(imageRes)
+
+        const filePath = res.tempFilePaths[0]
+
+        // 上传图片
+        const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
+        wx.cloud.uploadFile({
+          cloudPath,
+          filePath,
+          success: async res => {
+            console.log('[上传文件] 成功：', res)
+
+            app.globalData.fileID = res.fileID
+            app.globalData.cloudPath = cloudPath
+            app.globalData.imagePath = filePath
+
+            const ocrRes = await wx.cloud.callFunction({
+              name: 'ocrPrintedText',
+              data: {
+                fileID: res.fileID
+              }
+            })
+
+            console.log('ocrRes', ocrRes)
+
+
+          },
+          fail: e => {
+            console.error('[上传文件] 失败：', e)
+            wx.showToast({
+              icon: 'none',
+              title: '上传失败',
+            })
+          },
+          complete: () => {
+            wx.hideLoading()
+          }
+        })
       }
     })
   },
