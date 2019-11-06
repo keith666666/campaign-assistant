@@ -1,6 +1,8 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
-cloud.init();
+cloud.init({
+  env: cloud.DYNAMIC_CURRENT_ENV
+});
 
 const dbHelper = require('./db-helper');
 
@@ -48,7 +50,23 @@ async function searchMatchedCampaign(text) {
   //     result: []
   //   }
   // ];
-  let matchedCampaigns = campaigns.filter(campaign => text.indexOf(campaign.targetText) > -1);
+  let matchedCampaigns = campaigns.filter(campaign => {
+    let matched = (text.indexOf(campaign.targetText) > -1);
+    if (matched) {
+      let now = Date.now();
+      campaign.conditions.forEach(condition => {
+        if (condition.type === 'time') {
+          let { startTime, endTime } = condition.data;
+          if (now < startTime || now > endTime) {
+            console.log(now < startTime || now > endTime)
+            matched = false;
+            return;
+          }
+        }
+      });
+    }
+    return matched;
+  });
   console.log('matchedCampaigns---')
   console.log(JSON.stringify(matchedCampaigns));
   return matchedCampaigns;
