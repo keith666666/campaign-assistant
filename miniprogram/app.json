@@ -1,6 +1,10 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/merchant/index/index",
+    "pages/merchant/campaign/list/index",
+    "pages/merchant/campaign/analytics/index",
+    "pages/merchant/campaign/detail/index"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
