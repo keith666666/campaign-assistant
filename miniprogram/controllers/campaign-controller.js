@@ -10,6 +10,8 @@ function getCampaigns(cb) {
   }).catch(cb);
 }
 
+
 module.exports = {
-  getCampaigns
+  getCampaigns,
+
 };

@@ -1,2 +1,0 @@
-<!-- miniprogram/pages/merchant/campaign/list/index.wxml -->
-<view wx:for="{{campaigns}}">campaign.name</view>

@@ -2,16 +2,16 @@
 <view class="container">
   <view>
     <label>活动名称</label>
-    <input placeholder="请输入活动名称" data-key="name" bindinput="onTextInput" />
+    <input placeholder="请输入活动名称" data-key="name" bindinput="onTextInput" value="{{campaign.name}}" />
     <label>触发文字</label>
-    <input placeholder="用户扫描包含该文字的图片时触发该活动" data-key="targetText" bindinput="onTextInput" />
+    <input placeholder="用户扫描包含该文字的图片时触发该活动" data-key="targetText" bindinput="onTextInput" value="{{campaign.targetText}}" />
     <view>
       <label>地点</label>
       <text id="txt_location" catchtap="onSelectLocation">
         {{campaign.conditions[0].data.name||'请点击选择活动地点'}}
       </text>
       <label>有效距离(米)</label>
-      <input placeholder="请输入有效距离" data-key="radius" type="number" value="{{condition.data.radius}}" bindinput="onTextInput" />
+      <input placeholder="请输入有效距离" data-key="radius" type="number" bindinput="onTextInput" value="{{campaign.conditions[0].data.radius}}" />
     </view>
     <view>
       <label>活动奖励</label>
@@ -21,11 +21,11 @@
       </view>
       <view>
         <label>折扣力度(0-10折)</label>
-        <input placeholder="请输入折扣力度" data-key="discount" type="digit" bindinput="onTextInput" />
+        <input placeholder="请输入折扣力度" data-key="discount" type="digit" bindinput="onTextInput" value="{{campaign.result.data.discount}}" />
       </view>
     </view>
     <label>开启</label>
-    <switch checked="{{switchChecked}}" bindchange="onSwitchChange" />
+    <switch checked="{{campaign.enabled}}" bindchange="onSwitchChange" />
     <button type="primary" catchtap="onSave">保存</button>
   </view>
   <!-- <view class="ct_dialog">

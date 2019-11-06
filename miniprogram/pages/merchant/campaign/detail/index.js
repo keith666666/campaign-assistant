@@ -9,6 +9,7 @@ function showToast(message) {
     title: message
   });
 }
+
 Page({
 
   /**
@@ -29,18 +30,35 @@ Page({
       result: {
         type: 'coupon',
         data: {
-          discount: 20
+          discount: null
         }
       },
       enabled: false
     },
+    mode: 'create',//create or edit
+    campaignIndex: 0,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    let { mode, index } = options;
+    if (mode === 'edit') {
+      let eventChannel = this.getOpenerEventChannel();
+      // eventChannel.emit('acceptDataFromOpenedPage', { data: 'test' });
+      // 监听acceptDataFromOpenerPage事件，获取上一页面通过eventChannel传送到当前页面的数据
+      let self = this;
+      eventChannel.on('acceptDataFromOpenerPage', function (data) {
+        console.log('acceptDataFromOpenerPage');
+        console.log(data);
+        self.setData({
+          campaign: data,
+          mode: 'edit',
+          campaignIndex: index
+        });
+      });
+    }
   },
 
   /**
@@ -162,7 +180,7 @@ Page({
   onSave() {
     console.log('onSave')
     console.log(this.data.campaign);
-    let campaign = this.data.campaign;
+    let { mode, campaign, campaignIndex } = this.data;
     let { name, targetText, conditions, result } = campaign;
     name = name ? name.trim() : null;
     if (!name) {
@@ -189,11 +207,36 @@ Page({
     }
     result.data.discount = discount;
     console.log(JSON.stringify(campaign));
-    dbHelper.promisedCreateCampaign(campaign).then(campaignId => {
-      showToast('创建成功');
-    }).catch(err => {
-      console.log(err);
-      showToast('触发文字已存在,请更换');
-    });
+    let self = this;
+    if (mode === 'create') {
+      dbHelper.promisedCreateCampaign(campaign).then(campaignId => {
+        showToast('创建成功');
+        let eventChannel = self.getOpenerEventChannel();
+        campaign._id = campaignId;
+        eventChannel.emit('acceptDataFromOpenedPage', {
+          mode: 'create',
+          campaign
+        });
+        wx.navigateBack();
+      }).catch(err => {
+        console.log(err);
+        showToast('触发文字已存在,请更换');
+      });
+    } else {
+      // edit mode
+      dbHelper.promisedUpdateCampaign(campaign).then(res => {
+        showToast('更新成功');
+        let eventChannel = self.getOpenerEventChannel();
+        eventChannel.emit('acceptDataFromOpenedPage', {
+          mode: 'update',
+          campaignIndex,
+          campaign
+        });
+        wx.navigateBack();
+      }).catch(err => {
+        console.log(err);
+        showToast('更新失败');
+      });
+    }
   }
 })

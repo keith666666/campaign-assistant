@@ -57,6 +57,7 @@ function promisedGetCampaigns(openId) {
 function promisedCreateCampaign(rawCampaign) {
   let logPrefix = 'promisedCreateCampaign';
   rawCampaign.created = db.serverDate();
+  rawCampaign.joinedNumber = 0;
   let promisedResult = db.collection('campaign').add({
     data: rawCampaign
   }).then(res => {
@@ -66,9 +67,23 @@ function promisedCreateCampaign(rawCampaign) {
   });
   return promisedResult;
 }
+function promisedUpdateCampaign(campaign) {
+  let logPrefix = 'promisedUpdateCampaign';
+  let { name, targetText, conditions, result, enabled } = campaign;
+  let updatedData = { name, targetText, conditions, result, enabled };
+  let promisedResult = db.collection('campaign').doc(campaign._id).update({
+    data: updatedData
+  }).then(res => {
+    console.log(logPrefix, 'result');
+    console.log(res.stats.updated);
+    return res.stats.updated;
+  });
+  return promisedResult;
+}
 
 module.exports = {
   promisedFindOrCreateUser,
   promisedGetCampaigns,
   promisedCreateCampaign,
+  promisedUpdateCampaign,
 };

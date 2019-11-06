@@ -1,7 +1,34 @@
 <!-- miniprogram/pages/merchant/index/index.wxml -->
-<button class="btn" type="primary">
-  <navigator url="/pages/merchant/campaign/detail/index" hover-class="none">添加活动</navigator>
-</button>
-<button class="btn" type="primary">
-  <navigator url="/pages/merchant/campaign/list/index" hover-class="none">活动列表</navigator>
-</button>
+<view class="container">
+  <block wx:for="{{campaigns}}" wx:for-item="campaign">
+    <view class="ct_campaigns">
+      <view class="ct_campaign">
+        <view>
+          <label>活动名称:</label>
+          <text>{{campaign.name}}</text>
+        </view>
+        <view>
+          <label>触发文字:</label>
+          <text>{{campaign.targetText}}</text>
+        </view>
+        <view>
+          <text>{{campaign.enabled?'已开启':'已关闭'}}</text>
+          <label>已参与人数:</label>
+          <text>{{campaign.joinedNumber}}</text>
+        </view>
+      </view>
+      <view class="ct_btn_campaign">
+        <button size="mini" type="primary" class="btn_campaign" data-index="{{index}}" catchtap="onAnalytics">
+          统计
+        </button>
+        <button size="mini" type="primary" class="btn_campaign" data-index="{{index}}" catchtap="onEdit">
+          编辑
+        </button>
+      </view>
+    </view>
+  </block>
+  <button class="btn" type="primary" catchtap="onCreate">添加活动</button>
+  <button class="btn" type="primary">
+    <navigator url="/pages/merchant/campaign/list/index" hover-class="none">活动列表</navigator>
+  </button>
+</view>
