@@ -5,7 +5,7 @@ const db = wx.cloud.database();
 
 // for customer and merchant
 function promisedFindOrCreateUser(type = 'customer', openId) {
-  let logPrefix = 'findOrCreateUser ' + type;
+  let logPrefix = 'promisedFindOrCreateUser ' + type;
   console.log(logPrefix, 'openId:', openId);
 
   let collectionName = type;
@@ -33,13 +33,67 @@ function promisedFindOrCreateUser(type = 'customer', openId) {
         console.log(logPrefix, 'create user?', Boolean(res._id));
         user._id = res._id;
         return user;
-      }).catch(console.error);
+      });
       return promisedCreateUser;
     }
   });
   return promisedResult;
 }
 
+
+function promisedGetCampaigns(openId) {
+  let logPrefix = 'promisedGetCampaigns';
+  console.log(logPrefix, 'openId:', openId);
+  let promisedResult = db.collection('campaign').where({
+    _openid: openId
+  }).get().then(res => {
+    console.log(logPrefix, 'result');
+    console.log(res.data);
+    return res.data;
+  });
+  return promisedResult;
+}
+
+function promisedCreateCampaign(rawCampaign) {
+  let logPrefix = 'promisedCreateCampaign';
+  rawCampaign.created = db.serverDate();
+  rawCampaign.joinedNumber = 0;
+  let promisedResult = db.collection('campaign').add({
+    data: rawCampaign
+  }).then(res => {
+    console.log(logPrefix, 'result');
+    console.log(res._id);
+    return res._id;
+  });
+  return promisedResult;
+}
+function promisedUpdateCampaign(campaign) {
+  let logPrefix = 'promisedUpdateCampaign';
+  let { name, targetText, conditions, result, enabled } = campaign;
+  let updatedData = { name, targetText, conditions, result, enabled };
+  let promisedResult = db.collection('campaign').doc(campaign._id).update({
+    data: updatedData
+  }).then(res => {
+    console.log(logPrefix, 'result');
+    console.log(res.stats.updated);
+    return res.stats.updated;
+  });
+  return promisedResult;
+}
+function promisedDeleteCampaign(campaign) {
+  let logPrefix = 'promisedDeleteCampaign';
+  let promisedResult = db.collection('campaign').doc(campaign._id).remove().then(res => {
+    console.log(logPrefix, 'result');
+    console.log(res.stats.removed);
+    return res.stats.removed;
+  });
+  return promisedResult;
+}
+
 module.exports = {
   promisedFindOrCreateUser,
+  promisedGetCampaigns,
+  promisedCreateCampaign,
+  promisedUpdateCampaign,
+  promisedDeleteCampaign
 };
