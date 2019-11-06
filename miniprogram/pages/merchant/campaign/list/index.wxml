@@ -1,2 +1,2 @@
-<!--miniprogram/pages/merchant/campaign/list/index.wxml-->
-<text>miniprogram/pages/merchant/campaign/list/index.wxml</text>
+<!-- miniprogram/pages/merchant/campaign/list/index.wxml -->
+<view wx:for="{{campaigns}}">campaign.name</view>

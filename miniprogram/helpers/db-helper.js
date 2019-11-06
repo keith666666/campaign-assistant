@@ -5,7 +5,7 @@ const db = wx.cloud.database();
 
 // for customer and merchant
 function promisedFindOrCreateUser(type = 'customer', openId) {
-  let logPrefix = 'findOrCreateUser ' + type;
+  let logPrefix = 'promisedFindOrCreateUser ' + type;
   console.log(logPrefix, 'openId:', openId);
 
   let collectionName = type;
@@ -33,13 +33,28 @@ function promisedFindOrCreateUser(type = 'customer', openId) {
         console.log(logPrefix, 'create user?', Boolean(res._id));
         user._id = res._id;
         return user;
-      }).catch(console.error);
+      });
       return promisedCreateUser;
     }
   });
   return promisedResult;
 }
 
+
+function promisedGetCampaigns(openId) {
+  let logPrefix = 'promisedGetCampaigns';
+  console.log(logPrefix, 'openId:', openId);
+  let promisedResult = db.collection('campaign').where({
+    _openid: openId
+  }).get().then(res => {
+    console.log(logPrefix, 'result');
+    console.log(res.data);
+    return res.data;
+  });
+  return promisedResult;
+}
+
 module.exports = {
   promisedFindOrCreateUser,
+  promisedGetCampaigns,
 };

@@ -1,18 +1,35 @@
 // miniprogram/pages/merchant/campaign/list/index.js
+let campaignController = require('../../../../controllers/campaign-controller');
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    campaigns: [
+      // {
+      //     name: 'test',
+      //     targetText: '小程序',
+      //     conditions: [],
+      //     result: []
+      //   }
+    ]
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    let self = this;
+    campaignController.getCampaigns((err, data) => {
+      if (err) console.log(err);
+      else {
+        // app.globalData.merchant = user;
+        self.setData({
+          campaigns: data
+        });
+      }
+    });
   },
 
   /**

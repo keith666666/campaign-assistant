@@ -1,2 +1,7 @@
-<!--miniprogram/pages/merchant/index/index.wxml-->
-<text>miniprogram/pages/merchant/index/index.wxml</text>
+<!-- miniprogram/pages/merchant/index/index.wxml -->
+<button class="btn" type="primary">
+  <navigator url="/pages/merchant/campaign/detail/index" hover-class="none">添加活动</navigator>
+</button>
+<button class="btn" type="primary">
+  <navigator url="/pages/merchant/campaign/list/index" hover-class="none">活动列表</navigator>
+</button>
