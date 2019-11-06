@@ -179,7 +179,6 @@ Page({
   },
   onSave() {
     console.log('onSave')
-    console.log(this.data.campaign);
     let { mode, campaign, campaignIndex } = this.data;
     let { name, targetText, conditions, result } = campaign;
     name = name ? name.trim() : null;
@@ -238,5 +237,33 @@ Page({
         showToast('更新失败');
       });
     }
+  },
+  onDelete() {
+    let self = this;
+    wx.showModal({
+      title: '删除提示',
+      content: '确定删除吗?',
+      success(res) {
+        if (res.confirm) {
+          let { campaign, campaignIndex } = self.data;
+          dbHelper.promisedDeleteCampaign(campaign).then(res => {
+            if (res === 1) {
+              showToast('删除成功');
+              let eventChannel = self.getOpenerEventChannel();
+              eventChannel.emit('acceptDataFromOpenedPage', {
+                mode: 'delete',
+                campaignIndex,
+              });
+              wx.navigateBack();
+            } else {
+              showToast('删除失败');
+            }
+          }).catch(err => {
+            console.log(err);
+            showToast('删除失败');
+          });
+        }
+      }
+    });
   }
 })

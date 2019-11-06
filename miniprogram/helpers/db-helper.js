@@ -80,10 +80,20 @@ function promisedUpdateCampaign(campaign) {
   });
   return promisedResult;
 }
+function promisedDeleteCampaign(campaign) {
+  let logPrefix = 'promisedDeleteCampaign';
+  let promisedResult = db.collection('campaign').doc(campaign._id).remove().then(res => {
+    console.log(logPrefix, 'result');
+    console.log(res.stats.removed);
+    return res.stats.removed;
+  });
+  return promisedResult;
+}
 
 module.exports = {
   promisedFindOrCreateUser,
   promisedGetCampaigns,
   promisedCreateCampaign,
   promisedUpdateCampaign,
+  promisedDeleteCampaign
 };

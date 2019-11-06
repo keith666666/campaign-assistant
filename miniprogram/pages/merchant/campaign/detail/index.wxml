@@ -27,6 +27,7 @@
     <label>开启</label>
     <switch checked="{{campaign.enabled}}" bindchange="onSwitchChange" />
     <button type="primary" catchtap="onSave">保存</button>
+    <button type="warn" catchtap="onDelete" hidden="{{mode==='create'}}">删除</button>
   </view>
   <!-- <view class="ct_dialog">
     <view class="dialog">

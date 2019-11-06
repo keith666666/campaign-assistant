@@ -127,10 +127,7 @@ Page({
             "targetText": "1"
           }
         ];
-        self.setData({
-          campaigns
-        });
-        return;
+        // return;
         campaignController.getCampaigns((err, campaigns) => {
           if (err) console.log(err);
           else {
