@@ -1,7 +1,8 @@
 // 云函数入口文件
-const cloud = require('wx-server-sdk')
+const cloud = require('wx-server-sdk');
+cloud.init();
 
-cloud.init()
+const dbHelper = require('./db-helper');
 
 async function getFileURL(fileID) {
   let fileList = [fileID];
@@ -38,15 +39,15 @@ async function decodeOCRResult(ocrResult) {
 
 async function searchMatchedCampaign(text) {
   if (!text) return [];
-  // todo: get campaigns
-  let campaigns = [
-    {
-      name: 'test',
-      targetText: '小程序',
-      conditions: [],
-      result: []
-    }
-  ];
+  let campaigns = await dbHelper.getCampaigns(cloud);
+  // let campaigns = [
+  //   {
+  //     name: 'test',
+  //     targetText: '小程序',
+  //     conditions: [],
+  //     result: []
+  //   }
+  // ];
   let matchedCampaigns = campaigns.filter(campaign => text.indexOf(campaign.targetText) > -1);
   console.log('matchedCampaigns---')
   console.log(JSON.stringify(matchedCampaigns));
@@ -57,8 +58,7 @@ async function searchMatchedCampaign(text) {
 exports.main = async (event, context) => {
   try {
     let { fileID } = event;
-    // todo: remove
-    fileID = 'cloud://xly-4aiv8.786c-xly-4aiv8-1300617887/WechatIMG116.jpeg';
+    // fileID = 'cloud://xly-4aiv8.786c-xly-4aiv8-1300617887/WechatIMG116.jpeg';
     let fileURL = await getFileURL(fileID);
     let ocrResult = await parseImage(fileURL);
     let text = await decodeOCRResult(ocrResult);
