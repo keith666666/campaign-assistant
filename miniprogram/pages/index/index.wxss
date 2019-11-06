@@ -135,3 +135,8 @@ page {
   line-height: 36rpx;
   word-break: break-all;
 }
+
+
+.ocr-btn{
+  margin: 30px 0;
+}

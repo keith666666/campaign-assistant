@@ -1,5 +1,6 @@
 //index.js
 const app = getApp()
+const cloud = require('wx-server-sdk')
 
 Page({
   data: {
@@ -7,7 +8,39 @@ Page({
     userInfo: {},
     logged: false,
     takeSession: false,
-    requestResult: ''
+    requestResult: '',
+
+    markers: [{
+      iconPath: "../../image/location.png",
+      id: 0,
+      latitude: 23.099994,
+      longitude: 113.324520,
+      width: 50,
+      height: 50
+    }],
+    polyline: [{
+      points: [{
+        longitude: 113.3245211,
+        latitude: 23.10229
+      }, {
+        longitude: 113.324520,
+        latitude: 23.21229
+      }],
+      color: "#FF0000DD",
+      width: 2,
+      dottedLine: true
+    }],
+    controls: [{
+      id: 1,
+      iconPath: '../../image/location.png',
+      position: {
+        left: 0,
+        top: 300 - 50,
+        width: 50,
+        height: 50
+      },
+      clickable: true
+    }]
   },
 
   onLoad: function () {
@@ -34,6 +67,10 @@ Page({
         }
       }
     })
+  },
+
+  onReady: function (e) {
+    this.mapCtx = wx.createMapContext('map')
   },
 
   onGetUserInfo: function (e) {
@@ -116,5 +153,55 @@ Page({
       }
     })
   },
+
+  async handleOcr() {
+    const res = await wx.chooseImage({
+      count: 1,
+      sizeType: ['compressed'],
+      sourceType: ['camera'],
+    })
+
+    wx.showLoading({
+      title: '上传中',
+    })
+
+    const filePath = res.tempFilePaths[0]
+
+    // 上传图片
+    const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
+    wx.cloud.uploadFile({
+      cloudPath,
+      filePath,
+      success: res => {
+        console.log('[上传文件] 成功：', res)
+
+        app.globalData.fileID = res.fileID
+        app.globalData.cloudPath = cloudPath
+        app.globalData.imagePath = filePath
+
+
+      },
+      fail: e => {
+        console.error('[上传文件] 失败：', e)
+        wx.showToast({
+          icon: 'none',
+          title: '上传失败',
+        })
+      },
+      complete: () => {
+        wx.hideLoading()
+      }
+    })
+  },
+
+  regionchange(e) {
+    console.log(e.type)
+  },
+  markertap(e) {
+    console.log(e.markerId)
+  },
+  controltap(e) {
+    console.log(e.controlId)
+  }
 
 })
