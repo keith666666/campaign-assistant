@@ -1,2 +1,65 @@
-<!--miniprogram/pages/merchant/campaign/detail/index.wxml-->
-<text>miniprogram/pages/merchant/campaign/detail/index.wxml</text>
+<!-- miniprogram/pages/merchant/campaign/detail/index.wxml -->
+<view class="container">
+  <view>
+    <label>活动名称</label>
+    <input placeholder="请输入活动名称" data-key="name" bindinput="onTextInput" />
+    <label>触发文字</label>
+    <input placeholder="用户扫描包含该文字的图片时触发该活动" data-key="targetText" bindinput="onTextInput" />
+    <view>
+      <label>地点</label>
+      <text id="txt_location" catchtap="onSelectLocation">
+        {{campaign.conditions[0].data.name||'请点击选择活动地点'}}
+      </text>
+      <label>有效距离(米)</label>
+      <input placeholder="请输入有效距离" data-key="radius" type="number" value="{{condition.data.radius}}" bindinput="onTextInput" />
+    </view>
+    <view>
+      <label>活动奖励</label>
+      <view>
+        <label>类型</label>
+        <text>优惠劵</text>
+      </view>
+      <view>
+        <label>折扣力度(0-10折)</label>
+        <input placeholder="请输入折扣力度" data-key="discount" type="digit" bindinput="onTextInput" />
+      </view>
+    </view>
+    <label>开启</label>
+    <switch checked="{{switchChecked}}" bindchange="onSwitchChange" />
+    <button type="primary" catchtap="onSave">保存</button>
+  </view>
+  <!-- <view class="ct_dialog">
+    <view class="dialog">
+      <label>请选择类型</label>
+      <radio-group>
+        <label wx:for="{{conditionTypes}}">
+          <radio value="{{index}}" checked="{{index===conditionTypeCheckedIndex}}" />
+          {{item}}
+        </label>
+      </radio-group>
+      <view wx:if="{{conditionTypeCheckedIndex===0}}">
+        <view class="ct_time_selection">
+          <label>开始时间</label>
+          <picker mode="date" bindchange="bindDateChange">
+            <view class="picker">{{date}}</view>
+          </picker>
+          <picker mode="time" value="{{time}}" bindchange="bindTimeChange">
+            <view class="picker">当前选择: {{time}}</view>
+          </picker>
+        </view>
+        <label>结束时间</label>
+        <picker mode="date" value="{{date}}" bindchange="bindDateChange">
+          <view class="picker">当前选择: {{date}}</view>
+        </picker>
+      </view>
+      <view wx:if="{{conditionTypeCheckedIndex===1}}">
+        <label>地点</label>
+        <text>{{condition.data.name}}</text>
+        <label>有效距离</label>
+        <text>{{condition.data.radius}}米</text>
+      </view>
+      <button size="mini">取消</button>
+      <button size="mini" type="primary">确定</button>
+    </view>
+  </view> -->
+</view>

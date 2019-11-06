@@ -1,11 +1,39 @@
 // miniprogram/pages/merchant/campaign/detail/index.js
+
+let authHelper = require('../../../../helpers/auth-helper');
+let dbHelper = require('../../../../helpers/db-helper');
+
+function showToast(message) {
+  wx.showToast({
+    icon: 'none',
+    title: message
+  });
+}
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    campaign: {
+      name: null,
+      targetText: null,
+      conditions: [
+        {
+          type: 'location',
+          data: {
 
+          }
+        }
+      ],
+      result: {
+        type: 'coupon',
+        data: {
+          discount: 20
+        }
+      },
+      enabled: false
+    },
   },
 
   /**
@@ -62,5 +90,110 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  onSelectLocation() {
+    console.log('onSelectLocation')
+    let self = this;
+    wx.chooseLocation({
+      success: (res) => {
+        console.log('onSelectLocation success');
+        let { name, latitude, longitude } = res;
+        let campaign = self.data.campaign;
+        let condition = campaign.conditions[0];
+        condition.data.name = name;
+        condition.data.centerPoint = {
+          coordinates: [longitude, latitude],
+          type: 'Point'
+        }
+        this.setData({
+          campaign
+        });
+      },
+      fail() {
+        authHelper.authorize('scope.userLocation', '授权申请', '该权限用于打开地图选择位置', (err, res) => {
+          if (err) throw err;
+          wx.chooseLocation({
+            success(res) {
+              console.log('onSelectLocation success');
+              console.log(res);
+              let { name, latitude, longitude } = res;
+              let campaign = self.data.campaign;
+              let condition = campaign.conditions[0];
+              condition.data.name = name;
+              condition.data.centerPoint = {
+                coordinates: [longitude, latitude],
+                type: 'Point'
+              }
+              this.setData({
+                campaign
+              });
+            }
+          });
+        });
+      }
+    });
+  },
+  onSwitchChange(event) {
+    let { value } = event.detail;
+    this.data.campaign.enabled = value;
+  },
+  onTextInput(event) {
+    let { currentTarget: { dataset: { key } }, detail: { value } } = event;
+    let campaign = this.data.campaign;
+    switch (key) {
+      case 'name': {
+        campaign.name = value;
+        break;
+      }
+      case 'targetText': {
+        campaign.targetText = value;
+        break;
+      }
+      case 'radius': {
+        campaign.conditions[0].data.radius = value;
+        break;
+      }
+      case 'discount': {
+        campaign.result.data.discount = value;
+        break;
+      }
+    }
+  },
+  onSave() {
+    console.log('onSave')
+    console.log(this.data.campaign);
+    let campaign = this.data.campaign;
+    let { name, targetText, conditions, result } = campaign;
+    name = name ? name.trim() : null;
+    if (!name) {
+      showToast('无效的活动名称');
+      return;
+    }
+    targetText = targetText ? targetText.trim() : null;
+
+    if (!targetText) {
+      showToast('无效的触发文字');
+      return;
+    }
+    let condition = conditions[0];
+    let radius = Number(condition.data.radius);
+    if (isNaN(condition.data.radius)) {
+      showToast('无效的距离');
+      return;
+    }
+    condition.data.radius = radius;
+    let discount = Number(result.data.discount);
+    if (isNaN(discount) || discount < 0 || discount > 10) {
+      showToast('无效的折扣力度');
+      return;
+    }
+    result.data.discount = discount;
+    console.log(JSON.stringify(campaign));
+    dbHelper.promisedCreateCampaign(campaign).then(campaignId => {
+      showToast('创建成功');
+    }).catch(err => {
+      console.log(err);
+      showToast('触发文字已存在,请更换');
+    });
   }
 })

@@ -54,7 +54,21 @@ function promisedGetCampaigns(openId) {
   return promisedResult;
 }
 
+function promisedCreateCampaign(rawCampaign) {
+  let logPrefix = 'promisedCreateCampaign';
+  rawCampaign.created = db.serverDate();
+  let promisedResult = db.collection('campaign').add({
+    data: rawCampaign
+  }).then(res => {
+    console.log(logPrefix, 'result');
+    console.log(res._id);
+    return res._id;
+  });
+  return promisedResult;
+}
+
 module.exports = {
   promisedFindOrCreateUser,
   promisedGetCampaigns,
+  promisedCreateCampaign,
 };

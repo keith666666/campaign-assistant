@@ -14,5 +14,10 @@
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",
-  "style": "v2"
+  "style": "v2",
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于打开地图选择位置"
+    }
+  }
 }
