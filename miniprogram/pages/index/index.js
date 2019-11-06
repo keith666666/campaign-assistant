@@ -1,6 +1,15 @@
 //index.js
 const app = getApp()
 let indexController = require('../../controllers/index-controller');
+const timeHelpe = require('../../helpers/time-helper.js')
+
+const localLongitude = 116.45120239257812
+const localLatitude = 39.91256332397461
+
+const db = wx.cloud.database()
+const _ = db.command
+const campaignCustomerLink = db.collection('campaign-customer-link')
+const campaign = db.collection('campaign')
 
 Page({
   data: {
@@ -9,12 +18,13 @@ Page({
     logged: false,
     takeSession: false,
     requestResult: '',
+    latitude: 39.91256332397461,
+    longitude: 116.45120239257812,
 
     markers: [{
-      iconPath: "../../image/location.png",
       id: 0,
-      latitude: 23.099994,
-      longitude: 113.324520,
+      latitude: 39.91256332397461,
+      longitude: 116.45120239257812,
       width: 50,
       height: 50
     }],
@@ -30,17 +40,23 @@ Page({
       width: 2,
       dottedLine: true
     }],
-    controls: [{
-      id: 1,
-      iconPath: '../../image/location.png',
-      position: {
-        left: 0,
-        top: 300 - 50,
-        width: 50,
-        height: 50
-      },
-      clickable: true
+    circles: [{
+      latitude: localLatitude,
+      longitude: localLongitude,
+      radius: 500,
+      fillColor: '#0000001c'
     }]
+    // controls: [{
+    //   id: 1,
+    //   iconPath: '../../image/location.png',
+    //   position: {
+    //     left: 0,
+    //     top: 300 - 50,
+    //     width: 50,
+    //     height: 50
+    //   },
+    //   clickable: true
+    // }]
   },
 
   onLoad: function () {
@@ -54,7 +70,7 @@ Page({
       if (err) console.log(err);
       else {
         app.globalData.customer = user;
-        console.log(user);
+        console.log('user', user);
       }
     });
 
@@ -72,6 +88,25 @@ Page({
             }
           })
         }
+      }
+    })
+
+    wx.getLocation({
+      type: 'wgs84',
+      success: res => {
+        const latitude = res.latitude
+        const longitude = res.longitude
+        const speed = res.speed
+        const accuracy = res.accuracy
+
+        console.log('location info', res)
+
+        this.setData({
+          latitude,
+          longitude
+        })
+        app.globalData.longitude = longitude;
+        app.globalData.latitude = latitude;
       }
     })
   },
@@ -111,81 +146,45 @@ Page({
     })
   },
 
-  // 上传图片
-  doUpload: function () {
-    // 选择图片
+  handleOcr: function() {
+    console.log(app.globalData)
+    // const date = new Date()
+    // timeHelpe.formatTime(date)
+    const customerId = app.globalData.customer ? app.globalData.customer._id : 'all'
+    // const distance = this.getDistance(
+    //   this.data.latitude,
+    //   this.data.longitude,
+    //   localLatitude,
+    //   localLongitude
+    // )
+    // console.log('distance', distance)
+    // if (distance > 2) {
+    //   wx.showToast({
+    //     title: '请到指定地点扫描打卡',
+    //   })
+    //   return
+    // }
+
     wx.chooseImage({
       count: 1,
       sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: function (res) {
-
+      sourceType: ['camera'],
+      success: (res) => {
         wx.showLoading({
-          title: '上传中',
+          title: '扫描识别中',
         })
 
         const filePath = res.tempFilePaths[0]
 
         // 上传图片
-        const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
-        wx.cloud.uploadFile({
-          cloudPath,
-          filePath,
-          success: res => {
-            console.log('[上传文件] 成功：', res)
-
-            app.globalData.fileID = res.fileID
-            app.globalData.cloudPath = cloudPath
-            app.globalData.imagePath = filePath
-
-            wx.navigateTo({
-              url: '../storageConsole/storageConsole'
-            })
-          },
-          fail: e => {
-            console.error('[上传文件] 失败：', e)
-            wx.showToast({
-              icon: 'none',
-              title: '上传失败',
-            })
-          },
-          complete: () => {
-            wx.hideLoading()
-          }
-        })
-
-      },
-      fail: e => {
-        console.error(e)
-      }
-    })
-  },
-
-  async handleOcr() {
-    const imageRes = await wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album','camera'],
-      success(res) {
-        wx.showLoading({
-          title: '上传中',
-        })
-
-        console.log(imageRes)
-
-        const filePath = res.tempFilePaths[0]
-
-        // 上传图片
-        const cloudPath = 'my-image' + filePath.match(/\.[^.]+?$/)[0]
+        const filename = `${Date.now()}-${Math.random().toString(36).substr(2)}`;
+        const fileExtension = filePath.split('.').pop() || '.png';
+        const cloudPath = `customers/${customerId}/${filename}.${fileExtension}`
         wx.cloud.uploadFile({
           cloudPath,
           filePath,
           success: async res => {
             console.log('[上传文件] 成功：', res)
-
-            app.globalData.fileID = res.fileID
-            app.globalData.cloudPath = cloudPath
-            app.globalData.imagePath = filePath
 
             const ocrRes = await wx.cloud.callFunction({
               name: 'ocrPrintedText',
@@ -194,7 +193,74 @@ Page({
               }
             })
 
-            console.log('ocrRes', ocrRes)
+            // 识别成功
+            if (ocrRes.result && ocrRes.result.length) {
+              const resFirst = ocrRes.result[0]
+              const campaignId = resFirst._id
+              const locationCondition = resFirst.conditions.find(item => item.type === 'location')
+
+              const centerLng = locationCondition.data.centerPoint.coordinates[0]
+              const centerLat = locationCondition.data.centerPoint.coordinates[1]
+              const centerRadius = locationCondition.data.centerPoint.radius
+
+              const distance = this.getDistance(
+                this.data.latitude,
+                this.data.longitude,
+                centerLat,
+                centerLng
+              )
+
+              if (distance * 1000 > centerRadius) {
+                wx.showToast({
+                  title: '请到指定地点扫描打卡',
+                })
+                return
+              }
+              
+
+              const resultId = `${Date.now()}-${Math.random().toString(36).substr(2)}`
+
+              const ifExits = await campaignCustomerLink.where({
+                campaignId,
+                customerId
+              }).get()
+
+              if (ifExits.data && ifExits.data.length) {
+                wx.showModal({
+                  title: '提示',
+                  content: '您已经打卡，无需再打卡。',
+                })
+                return
+              }
+
+              campaignCustomerLink.add({
+                data: {
+                  customerId,
+                  campaignId,
+                  resultId
+                },
+                success: async (res) => {
+                  wx.showModal({
+                    title: '提示',
+                    content: '打卡成功，已发放优惠券',
+                  })
+
+                  // 活动参加人数加1
+                  await wx.cloud.callFunction({
+                    name: 'joinedNumberInc',
+                    data: {
+                      campaignId
+                    }
+                  })
+                },
+                fail: console.error
+              })
+            } else {
+              wx.showModal({
+                title: '提示',
+                content: '打卡失败，请到指定区域范围内打卡，并扫描带有活动关键字的图片。',
+              })
+            }
 
 
           },
@@ -202,7 +268,7 @@ Page({
             console.error('[上传文件] 失败：', e)
             wx.showToast({
               icon: 'none',
-              title: '上传失败',
+              title: '识别失败',
             })
           },
           complete: () => {
@@ -211,6 +277,18 @@ Page({
         })
       }
     })
+  },
+
+  getDistance(lat1, lng1, lat2, lng2){
+    const radLat1 = lat1 * Math.PI / 180.0;
+    const radLat2 = lat2 * Math.PI / 180.0;
+    const a = radLat1 - radLat2;
+    const b = lng1 * Math.PI / 180.0 - lng2 * Math.PI / 180.0;
+    let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
+      Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
+    s = s * 6378.137 ;// EARTH_RADIUS;
+    s = Math.round(s * 10000) / 10000;
+    return s;
   },
 
   regionchange(e) {
