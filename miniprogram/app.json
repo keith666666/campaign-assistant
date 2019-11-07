@@ -18,11 +18,15 @@
     "list": [
       {
         "text": "首页",
-        "pagePath": "pages/index/index"
+        "pagePath": "pages/index/index",
+        "iconPath":"images/home-unchecked.png",
+        "selectedIconPath":"images/home-checked.png"
       },
       {
         "text": "我的活动",
-        "pagePath": "pages/campaign/index"
+        "pagePath": "pages/campaign/index",
+        "iconPath": "images/profile-unchecked.png",
+        "selectedIconPath": "images/profile-checked.png"
       }
     ]
   },
