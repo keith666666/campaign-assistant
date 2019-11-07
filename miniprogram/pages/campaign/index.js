@@ -5,6 +5,8 @@ const _ = db.command
 const campaignCustomerLink = db.collection('campaign-customer-link')
 const campaign = db.collection('campaign')
 
+const campaignHeler = require('../../controllers/campaign-controller');
+
 Page({
 
   data: {
@@ -14,26 +16,24 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: async function (options) {
+  onLoad: function (options) {
+    let self = this;
     const _openid = app.globalData.customer._openid
-    const campaigns = await wx.cloud.callFunction({
-      name: 'getCampaigns',
-      data: {
-        _openid
+    campaignHeler.getCampaignsForCustomer(_openid, (err, campaigns) => {
+      if (err) {
+        console.log(err);
+      } else {
+        self.setData({
+          campaigns
+        })
       }
-    })
-
-    this.setData({
-      campaigns: campaigns.result.data
-    })
-
-    console.log(campaigns)
+    });
   },
 
   goInfo(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: '/pages/campaignInfo/index?id='+id
+      url: '/pages/campaignInfo/index?id=' + id
     })
   },
 
