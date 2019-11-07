@@ -1,10 +1,10 @@
-<!--index.wxml-->
+<!-- index.wxml -->
 <view class="container">
   <view class="ct_main">
     <!-- 用户 openid -->
     <!-- <view class="userinfo">
-    <button 
-      open-type="getUserInfo" 
+    <button
+      open-type="getUserInfo"
       bindgetuserinfo="onGetUserInfo"
       class="userinfo-avatar"
       style="background-image: url({{avatarUrl}})"
@@ -14,35 +14,46 @@
     </view>
   </view> -->
     <view class="ocr-btn">
-      <button type="primary" bindtap="handleOcr"> 扫描图片打卡 </button>
+      <button type="primary" bindtap="handleOcr">扫描图片打卡</button>
     </view>
-
     <view>
-      <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="14" controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}" circles="{{circles}}" bindmarkertap="markertap" polyline="{{polyline}}" bindregionchange="regionchange"
-        show-location style="height: 300px;"></map>
+      <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="14" controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}" circles="{{circles}}" bindmarkertap="markertap" polyline="{{polyline}}" bindregionchange="regionchange" show-location style="height: 300px;"></map>
     </view>
-
     <view wx:if="{{showCouponInfo}}" style="background-color: rgba(0,0,0,0.5);position: absolute;left:0;top:0;right:0;bottom:0;z-index:99">
       <view style="background-color: #fff;position: absolute;left: 50%;top:50%;transform: translate(-50%,-50%);width: 70%;height: 300px;color: #666;font-size: 14px;padding: 10px 20px;">
         <view style="text-align: center;padding: 10px">提示</view>
-        <view style="font-size: 12px;margin-bottom: 10px;">
-          扫描成功，您成功领取活动优惠折扣，优惠信息如下。
-        </view>
+        <view style="font-size: 12px;margin-bottom: 10px;">扫描成功，您成功领取活动优惠折扣，优惠信息如下。</view>
         <view style="margin-bottom: 5px;">活动名称：{{activeName}}</view>
         <view style="margin-bottom: 5px;">优惠券折扣：{{10 - couponDiscount}}折</view>
-        <view style="margin-bottom: 5px;">领取时间：{{couponTime}}</view>
-        <view style="display: flex;">
-          <!-- <button type="default">取消</button> -->
-          <button style="margin-top: 50px;" type="primary" bindtap="closeCouponInfo">确定</button>
+        <button type="primary" class="btn_merchant" style="margin-top: 10px;" size="mini" bindtap="goMerchant">
+          商家入口
+        </button>
+        <view wx:if="{{showCouponInfo}}" style="background-color: rgba(0,0,0,0.5);position: absolute;left:0;top:0;right:0;bottom:0;z-index:99">
+          <view style="background-color: #fff;position: absolute;left: 50%;top:50%;transform: translate(-50%,-50%);width: 70%;height: 300px;color: #666;font-size: 14px;padding: 10px 20px;">
+            <view style="text-align: center;padding: 10px">提示</view>
+            <view style="font-size: 12px;margin-bottom: 10px;">扫描成功，您成功领取活动优惠折扣，优惠信息如下。</view>
+            <view style="margin-bottom: 5px;">活动名称：{{activeName}}</view>
+            <view style="margin-bottom: 5px;">优惠券折扣：{{couponDiscount}}折</view>
+            <view style="margin-bottom: 5px;">领取时间：{{couponTime}}</view>
+            <view style="display: flex;">
+              <!-- <button type="default">取消</button> -->
+              <button style="margin-top: 50px;" type="primary" bindtap="closeCouponInfo">确定</button>
+            </view>
+          </view>
         </view>
-
+        <!-- <mp-dialog title="test" show="{{dialogShow}}">
+        <view>test content</view>
+    </mp-dialog> -->
+        <button type="primary" class="btn_merchant" style="margin-top: 10px;" size="mini" bindtap="goMerchant">
+          商家入口
+        </button>
       </view>
     </view>
-
     <!-- <mp-dialog title="test" show="{{dialogShow}}">
         <view>test content</view>
     </mp-dialog> -->
-
-    <button type="primary" class="btn_merchant" style="margin-top: 10px;" size="mini" bindtap="goMerchant"> 商家入口 </button>
+    <button type="primary" class="btn_merchant" style="margin-top: 10px;" size="mini" bindtap="goMerchant">
+      商家入口
+    </button>
   </view>
 </view>

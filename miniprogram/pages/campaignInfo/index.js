@@ -74,8 +74,7 @@ Page({
    */
   onShareAppMessage: function () {
     let { campaign: { name, result: { data: { discount } } } } = this.data.link;
-    let discountText = 10 - discount;
-    let title = `${name}活动邀请您来领取${discountText}折折扣`;
+    let title = `${name}活动邀请您来领取${discount}折折扣`;
     return {
       title,
       path: '/pages/index/index'
