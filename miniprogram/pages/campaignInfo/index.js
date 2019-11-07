@@ -12,22 +12,19 @@ Page({
    */
   data: {
     campaignInfo: {},
-    address: ''
+    address: '',
+    link: {}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: async function (options) {
-    const campaignItem = await campaign.doc(options.id).get()
-    console.log(campaignItem)
-
+    let { link } = options;
+    link = JSON.parse(link);
     this.setData({
-      campaignInfo:campaignItem.data,
-      address: campaignItem.data.conditions.find(item => item.type === 'location').data.name
-    })
-    
-    console.log(this.campaignInfo)
+      link
+    });
   },
 
   /**
@@ -76,6 +73,12 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    let { campaign: { name, result: { data: { discount } } } } = this.data.link;
+    let discountText = 10 - discount;
+    let title = `${name}活动邀请您来领取${discountText}折折扣`;
+    return {
+      title,
+      path: '/pages/index/index'
+    }
   }
-})
+});

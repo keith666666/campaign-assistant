@@ -5,35 +5,26 @@ const _ = db.command
 const campaignCustomerLink = db.collection('campaign-customer-link')
 const campaign = db.collection('campaign')
 
+const campaignHeler = require('../../controllers/campaign-controller');
+let timeHelper = require('../../helpers/time-helper');
+
 Page({
 
   data: {
-    campaigns: []
+    campaignCustomerLinks: []
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: async function (options) {
-    const _openid = app.globalData.customer._openid
-    const campaigns = await wx.cloud.callFunction({
-      name: 'getCampaigns',
-      data: {
-        _openid
-      }
-    })
+  onLoad: function (options) {
 
-    this.setData({
-      campaigns: campaigns.result.data
-    })
-
-    console.log(campaigns)
   },
 
   goInfo(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: '/pages/campaignInfo/index?id='+id
+      url: '/pages/campaignInfo/index?id=' + id
     })
   },
 
@@ -48,7 +39,20 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    let self = this;
+    campaignHeler.getCampaignCustomerLinksForCustomer((err, campaignCustomerLinks) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(JSON.stringify(campaignCustomerLinks));
+        campaignCustomerLinks.forEach(item => {
+          item.formattedCreated = timeHelper.formatTime2(new Date(item.created));
+        });
+        self.setData({
+          campaignCustomerLinks
+        });
+      }
+    });
   },
 
   /**
@@ -84,5 +88,14 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  onItemTap(event) {
+    console.log(event);
+    let { currentTarget: { dataset: { index } } } = event;
+    let link = this.data.campaignCustomerLinks[index];
+    let linkJson = JSON.stringify(link);
+    wx.navigateTo({
+      url: '/pages/campaignInfo/index?link=' + linkJson
+    });
   }
 })

@@ -1,6 +1,23 @@
 <view class="container">
-  <view>{{campaignInfo.name}}</view>
-  <view>目前参加总人数：{{campaignInfo.joinedNumber}}</view>
-  <view>地点：{{campaignInfo.conditions[1].data.name}}</view>
-  <view>活动详情：略</view>
+  <view class="weui-cell__bd">活动详情</view>
+  <view class="ct_campaign_items">
+    <view class="ct_campaign">
+      <view>
+        <label class="lb_campaign">活动名称:</label>
+        <text class="txt_campaign">{{link.campaign.name}}</text>
+      </view>
+      <view>
+        <label class="lb_campaign">加入时间:</label>
+        <text class="txt_campaign">{{link.formattedCreated}}</text>
+      </view>
+      <view>
+        <label class="lb_campaign">优惠劵ID</label>
+        <text class="txt_campaign">{{link.resultId}}</text>
+      </view>
+      <view>
+        <label class="lb_campaign">已参与人数:</label>
+        <text class="txt_campaign">{{link.campaign.joinedNumber}}</text>
+      </view>
+    </view>
+  </view>
 </view>
