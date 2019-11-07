@@ -1,31 +1,40 @@
 <!-- miniprogram/pages/merchant/campaign/detail/index.wxml -->
 <view class="container">
-  <view>
-    <label>活动名称</label>
-    <input placeholder="请输入活动名称" data-key="name" bindinput="onTextInput" value="{{campaign.name}}" />
-    <label>触发文字</label>
-    <input placeholder="用户扫描包含该文字的图片时触发该活动" data-key="targetText" bindinput="onTextInput" value="{{campaign.targetText}}" />
-    <view>
-      <label>地点</label>
-      <text id="txt_location" catchtap="onSelectLocation">
-        {{campaign.conditions[0].data.name||'请点击选择活动地点'}}
-      </text>
-      <label>有效距离(米)</label>
-      <input placeholder="请输入有效距离" data-key="radius" type="number" bindinput="onTextInput" value="{{campaign.conditions[0].data.radius}}" />
-    </view>
-    <view>
-      <label>活动奖励</label>
-      <view>
-        <label>类型</label>
-        <text>优惠劵</text>
+  <view class="weui-cell__bd">新增活动</view>
+  <view class="ct_form_wrapper">
+    <view class="ct_form">
+      <view class="ct_tr">
+        <label class="td_lb">活动名称</label>
+        <input class="td" placeholder="请输入活动名称" data-key="name" bindinput="onTextInput" value="{{campaign.name}}" />
       </view>
-      <view>
-        <label>折扣力度(0-10折)</label>
-        <input placeholder="请输入折扣力度" data-key="discount" type="digit" bindinput="onTextInput" value="{{campaign.result.data.discount}}" />
+      <view class="ct_tr">
+        <label class="td_lb">触发文字</label>
+        <input class="td" placeholder="用户扫描识别后触发" data-key="targetText" bindinput="onTextInput" value="{{campaign.targetText}}" />
+      </view>
+      <view class="ct_tr">
+        <label class="td_lb">地点</label>
+        <!-- <text class="td" id="txt_location" catchtap="onSelectLocation">
+          {{campaign.conditions[0].data.name||'请点击选择活动地点'}}
+        </text> -->
+        <text class="td" id="txt_location" catchtap="onSelectLocation">{{campaign.conditions[0].data.name||'请点击选择活动地点'}}</text>
+      </view>
+      <view class="ct_tr">
+        <label class="td_lb">有效距离(米)</label>
+        <input class="td" placeholder="请输入有效距离" data-key="radius" type="number" bindinput="onTextInput" value="{{campaign.conditions[0].data.radius}}" />
+      </view>
+      <view class="ct_tr">
+        <label class="td_lb">奖励类型</label>
+        <text class="td">优惠劵</text>
+      </view>
+      <view class="ct_tr">
+        <label class="td_lb">折扣(0-10折)</label>
+        <input class="td" placeholder="请输入折扣力度" data-key="discount" type="digit" bindinput="onTextInput" value="{{campaign.result.data.discount}}" />
+      </view>
+      <view class="ct_tr last">
+        <label class="td_lb">开启</label>
+        <switch class="td" checked="{{campaign.enabled}}" bindchange="onSwitchChange" />
       </view>
     </view>
-    <label>开启</label>
-    <switch checked="{{campaign.enabled}}" bindchange="onSwitchChange" />
     <button type="primary" catchtap="onSave">保存</button>
     <button type="warn" catchtap="onDelete" hidden="{{mode==='create'}}">删除</button>
   </view>

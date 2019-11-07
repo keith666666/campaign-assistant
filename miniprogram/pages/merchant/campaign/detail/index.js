@@ -123,7 +123,7 @@ Page({
           coordinates: [longitude, latitude],
           type: 'Point'
         }
-        this.setData({
+        self.setData({
           campaign
         });
       },
@@ -142,7 +142,7 @@ Page({
                 coordinates: [longitude, latitude],
                 type: 'Point'
               }
-              this.setData({
+              self.setData({
                 campaign
               });
             }

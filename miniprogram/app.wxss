@@ -1,10 +1,13 @@
 /**app.wxss**/
+@import 'style/weui.wxss';
+
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-} 
+  background-color: #EDEDED;
+}
 
 button {
   background: initial;
@@ -20,12 +23,19 @@ button::after{
 
 
 page {
-  background: #f6f6f6;
+  background: #EDEDED;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 }
-
+page{
+  background-color: #EDEDED;
+  font-size: 16px;
+  font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
+}
+.page__hd {
+  padding: 40px;
+}
 .userinfo, .uploader, .tunnel {
   margin-top: 40rpx;
   height: 140rpx;

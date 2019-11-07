@@ -1,2 +1,36 @@
-<!--miniprogram/pages/merchant/campaign/analytics/index.wxml-->
-<text>miniprogram/pages/merchant/campaign/analytics/index.wxml</text>
+<!-- miniprogram/pages/merchant/campaign/analytics/index.wxml -->
+<view class="container" hidden="{{!loaded}}">
+  <view class="weui-cell">
+    <view class="weui-cell__ft">活动名称:</view>
+    <view class="weui-cell__bd">{{campaignName}}</view>
+  </view>
+  <view class="div_line"></view>
+  <view class="ct_cell">
+    <view class="weui-cell__ft">总参加人数:</view>
+    <view class="weui-cell__bd">{{total}}</view>
+  </view>
+  <label class="txt_table_name">时段统计表</label>
+  <view class="ct_group">
+    <label class="th table_item">时间</label>
+    <label class="th table_item">参与人数</label>
+  </view>
+  <view wx:for="{{groupedData}}" class="ct_groups">
+    <view class="ct_group">
+      <label class="lb_time table_item">{{item._id}}</label>
+      <text class="txt_number table_item">{{item.num}}</text>
+    </view>
+  </view>
+  <label class="txt_table_name">详细参与者列表</label>
+  <view class="ct_group">
+    <label class="th lb_index">序号</label>
+    <label class="th lb_created">参与时间</label>
+    <label class="th txt_openid">用户openid</label>
+  </view>
+  <view wx:for="{{listData}}" class="ct_groups">
+    <view class="ct_group">
+      <label class="lb_index table_item">{{index+1}}</label>
+      <label class="lb_created table_item">{{item.formattedCreated}}</label>
+      <text class="txt_openid table_item">{{item.customer._openid}}</text>
+    </view>
+  </view>
+</view>

@@ -59,75 +59,11 @@ Page({
         app.globalData.merchant = user;
         console.log(user);
         // todo: remove it
-        let campaigns = [
-          {
-            "_id": "00e70074-f4dd-40ad-9d12-90f38056e6c6",
-            "_openid": "o3g-25Cky5TouL9y8ZRYx6XcbSGQ",
-            "conditions": [
-              {
-                "data": {
-                  "endTime": "2019-11-07T10:40:12.000Z",
-                  "startTime": "2019-11-05T16:00:00.000Z"
-                },
-                "type": "time"
-              },
-              {
-                "data": {
-                  "centerPoint": {
-                    "coordinates": [
-                      116.45120239257812,
-                      39.91256332397461
-                    ],
-                    "type": "Point"
-                  },
-                  "name": "嘉里大酒店",
-                  "radius": 2000
-                },
-                "type": "location"
-              }
-            ],
-            "created": "2019-11-06T09:36:00.000Z",
-            "name": "小程序云开发极限编程",
-            "result": {
-              "data": {
-                "discount": 10
-              },
-              "type": "coupon"
-            },
-            "targetText": "小程序云开发"
-          },
-          {
-            "_id": "00a6cea35dc2f3f202a1287c2641750c",
-            "_openid": "o3g-25Cky5TouL9y8ZRYx6XcbSGQ",
-            "conditions": [
-              {
-                "data": {
-                  "centerPoint": {
-                    "coordinates": [
-                      116.44355,
-                      39.9219
-                    ],
-                    "type": "Point"
-                  },
-                  "name": "朝阳区政府",
-                  "radius": 1
-                },
-                "type": "location"
-              }
-            ],
-            "created": "2019-11-06T16:25:22.128Z",
-            "enabled": true,
-            "name": "1",
-            "result": {
-              "data": {
-                "discount": 1
-              },
-              "type": "coupon"
-            },
-            "targetText": "1"
-          }
-        ];
-        // return;
+        let campaigns = [{ "_id": "00e70074-f4dd-40ad-9d12-90f38056e6c6", "_openid": "o3g-25Cky5TouL9y8ZRYx6XcbSGQ", "conditions": [{ "data": { "endTime": "2019-11-07T10:40:12.000Z", "startTime": "2019-11-05T16:00:00.000Z" }, "type": "time" }, { "data": { "centerPoint": { "type": "Point", "coordinates": [116.45120239257812, 39.91256332397461] }, "name": "嘉里大酒店", "radius": 2000 }, "type": "location" }], "created": "2019-11-06T09:36:00.000Z", "joinedNumber": 3, "name": "小程序云开发极限编程", "result": { "data": { "discount": 10 }, "type": "coupon" }, "targetText": "小程序云开发" }, { "_id": "ca40fca95dc311d302a6a08b76f2f4c5", "_openid": "o3g-25Cky5TouL9y8ZRYx6XcbSGQ", "conditions": [{ "data": { "radius": 2 }, "type": "location" }], "created": "2019-11-06T18:32:51.543Z", "enabled": true, "joinedNumber": 0, "name": "test", "result": { "data": { "discount": 2 }, "type": "coupon" }, "targetText": "2" }, { "_id": "ca40fca95dc3129f02a6ae5f0aee12a6", "_openid": "o3g-25Cky5TouL9y8ZRYx6XcbSGQ", "conditions": [{ "data": { "centerPoint": { "type": "Point", "coordinates": [116.44165, 39.92229] }, "name": "朝外MEN写字中心A座", "radius": 3 }, "type": "location" }], "created": "2019-11-06T18:36:15.338Z", "enabled": true, "joinedNumber": 0, "name": "31", "result": { "data": { "discount": 3 }, "type": "coupon" }, "targetText": "31" }];
+        self.setData({
+          campaigns
+        });
+        return;
         campaignController.getCampaigns((err, campaigns) => {
           if (err) console.log(err);
           else {
@@ -193,21 +129,8 @@ Page({
     let { currentTarget: { dataset: { index } } } = event;
     let campaign = this.data.campaigns[index];
     wx.navigateTo({
-      url: '../campaign/analytics/index',
-      events: {
-        // 为指定事件添加一个监听器，获取被打开页面传送到当前页面的数据
-        acceptDataFromOpenedPage: function (data) {
-          console.log(data)
-        },
-        someEvent: function (data) {
-          console.log(data)
-        }
-      },
-      success: function (res) {
-        // 通过eventChannel向被打开页面传送数据
-        res.eventChannel.emit('acceptDataFromOpenerPage', { data: 'test' })
-      }
-    })
+      url: `../campaign/analytics/index?campaignId=${campaign._id}&&campaignName=${campaign.name}`
+    });
   },
   onEdit(event) {
     let { currentTarget: { dataset: { index } } } = event;
