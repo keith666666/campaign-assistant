@@ -73,7 +73,7 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-    let { name, joinedNumber, result: { data: { discount } } } = this.data.campaignInfo;
+    let { campaign: { name, result: { data: { discount } } } } = this.data.link;
     let discountText = 10 - discount;
     let title = `${name}活动邀请您来领取${discountText}折折扣`;
     return {

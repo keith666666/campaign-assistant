@@ -21,7 +21,6 @@
 }
 .ct_campaign_items{
   display: flex;
-  margin: 20rpx 30rpx;
   background:white;
 }
 .ct_campaign{
