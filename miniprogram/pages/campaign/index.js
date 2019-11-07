@@ -6,11 +6,12 @@ const campaignCustomerLink = db.collection('campaign-customer-link')
 const campaign = db.collection('campaign')
 
 const campaignHeler = require('../../controllers/campaign-controller');
+let timeHelper = require('../../helpers/time-helper');
 
 Page({
 
   data: {
-    campaigns: []
+    campaignCustomerLinks: []
   },
 
   /**
@@ -44,9 +45,12 @@ Page({
         console.log(err);
       } else {
         console.log(JSON.stringify(campaignCustomerLinks));
+        campaignCustomerLinks.forEach(item => {
+          item.formattedCreated = timeHelper.formatTime2(new Date(item.created));
+        });
         self.setData({
-          campaigns: campaignCustomerLinks
-        })
+          campaignCustomerLinks
+        });
       }
     });
   },

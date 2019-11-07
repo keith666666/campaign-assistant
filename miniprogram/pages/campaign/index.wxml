@@ -1,41 +1,23 @@
 <view class="container">
-  <view wx:for="{{campaigns}}" wx:key="{{index}}" data-id="{{item._id}}" bindtap="goInfo" class="campaign-list">
-    活动：{{item.name}}
-  </view>
-  <!-- miniprogram/pages/merchant/index/index.wxml -->
-  <view class="container">
-    <view class="weui-cell__bd">所有活动</view>
-    <block wx:for="{{campaigns}}" wx:for-item="campaign">
-      <view class="ct_campaigns">
-        <view class="ct_campaign_items">
-          <view class="ct_campaign">
-            <view>
-              <label class="lb_campaign">活动名称:</label>
-              <text class="txt_campaign">{{campaign.name}}</text>
-            </view>
-            <view>
-              <label class="lb_campaign">触发文字:</label>
-              <text class="txt_campaign">{{campaign.targetText}}</text>
-            </view>
-            <view>
-              <label class="{{campaign.enabled?'txt_enabled':'txt_disabled'}}">
-                {{campaign.enabled?'已开启':'已关闭'}}
-              </label>
-              <label class="lb_campaign">已参与人数:</label>
-              <text class="txt_campaign">{{campaign.joinedNumber}}</text>
-            </view>
+  <view class="weui-cell__bd">所有活动</view>
+  <block wx:for="{{campaignCustomerLinks}}">
+    <view class="ct_campaigns">
+      <view class="ct_campaign_items">
+        <view class="ct_campaign">
+          <view>
+            <label class="lb_campaign">活动名称:</label>
+            <text class="txt_campaign">{{item.campaign.name}}</text>
           </view>
-          <view class="ct_btn_campaign">
-            <button size="mini" type="primary" class="btn_campaign" data-index="{{index}}" catchtap="onAnalytics">
-              统计
-            </button>
-            <button size="mini" type="primary" class="btn_campaign" data-index="{{index}}" catchtap="onEdit">
-              编辑
-            </button>
+          <view>
+            <label class="lb_campaign">加入时间:</label>
+            <text class="txt_campaign">{{item.formattedCreated}}</text>
+          </view>
+          <view>
+            <label class="lb_campaign">已参与人数:</label>
+            <text class="txt_campaign">{{item.campaign.joinedNumber}}</text>
           </view>
         </view>
       </view>
-    </block>
-    <button class="btn" type="primary" catchtap="onCreate">添加活动</button>
-  </view>
+    </view>
+  </block>
 </view>
