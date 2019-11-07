@@ -23,10 +23,10 @@ Page({
     console.log(campaignItem)
 
     this.setData({
-      campaignInfo:campaignItem.data,
+      campaignInfo: campaignItem.data,
       address: campaignItem.data.conditions.find(item => item.type === 'location').data.name
     })
-    
+
     console.log(this.campaignInfo)
   },
 
@@ -76,6 +76,12 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    let { name, joinedNumber, result: { data: { discount } } } = this.data.campaignInfo;
+    let discountText = 10 - discount;
+    let title = `${name}活动邀请您来领取${discountText}折折扣`;
+    return {
+      title,
+      path: '/pages/index/index'
+    }
   }
-})
+});
