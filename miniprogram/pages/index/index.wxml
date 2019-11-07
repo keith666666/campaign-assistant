@@ -13,7 +13,6 @@
       <button class="userinfo-nickname" bindtap="onGetOpenid">点击获取 openid</button>
     </view>
   </view> -->
-
   <view class="ocr-btn">
     <button type="primary" bindtap="handleOcr"> 扫描图片打卡 </button>
   </view>
@@ -35,6 +34,8 @@
       style="height: 300px;"
     ></map>
   </view>
+
+  <button type="primary" style="margin-top: 10px;" size="mini" bindtap="goMerchant"> 商家入口 </button>
 
 
 </view>

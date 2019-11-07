@@ -165,6 +165,12 @@ Page({
     console.log('分享成功')
   },
 
+  goMerchant: function() {
+    wx.navigateTo({
+      url: '/pages/merchant/index/index',
+    })
+  },
+
   handleOcr: function() {
     wx.chooseImage({
       count: 1,

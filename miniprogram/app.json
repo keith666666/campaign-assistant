@@ -1,8 +1,8 @@
 {
   "pages": [
+    "pages/index/index",
     "pages/merchant/index/index",
     "pages/merchant/campaign/detail/index",
-    "pages/index/index",
     "pages/merchant/campaign/analytics/index",
     "pages/campaign/index",
     "pages/campaignInfo/index"
