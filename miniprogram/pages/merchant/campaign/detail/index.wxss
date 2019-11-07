@@ -46,3 +46,6 @@
 .ct_time_selection{
   display: flex;
 }
+.btn{
+  margin-top: 30rpx;
+}
