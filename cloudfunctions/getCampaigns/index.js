@@ -13,18 +13,23 @@ const campaign = db.collection('campaign')
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-  const { _openid } = event
+  const { customerId } = event
 
-  const ret = await campaignCustomerLink.where({ _openid }).get()
+  let result = await db.collection('campaign-customer-link').aggregate()
+    .match({
+      customerId
+    })
+    .lookup({
+      from: "campaign",
+      localField: "campaignId",
+      foreignField: "_id",
+      as: "campaign"
+    })
+    .unwind('$campaign')
+    .sort({
+      created: 1,
+    })
+    .end();
 
-  if (ret.data && ret.data.length) {
-    const campaignIds = [...new Set(ret.data.map(item => item.campaignId))]
-
-    const campaigns = campaign.where({ _id: _.in(campaignIds)} ).get()
-    return campaigns
-  }
-
-
-  return []
-
+  return result.list;
 }

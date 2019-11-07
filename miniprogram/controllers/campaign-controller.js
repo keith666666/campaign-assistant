@@ -10,16 +10,18 @@ function getCampaigns(cb) {
   }).catch(cb);
 }
 
-function getCampaignsForCustomer(openId, cb) {
-  const _openid = app.globalData.customer._openid
+function getCampaignCustomerLinksForCustomer(cb) {
+  const customerId = app.globalData.customer._id
   wx.cloud.callFunction({
     name: 'getCampaigns',
     data: {
-      _openid
+      customerId
     }
   }).then(res => {
-    let campaigns = res.result.data;
-    cb(null, campaigns);
+    console.log("getCampaignsForCustomer")
+    console.log(res);
+    let campaignCustomerLinks = res.result;
+    cb(null, campaignCustomerLinks);
   }).catch(err => {
     cb(err)
   });
@@ -27,5 +29,5 @@ function getCampaignsForCustomer(openId, cb) {
 
 module.exports = {
   getCampaigns,
-  getCampaignsForCustomer
+  getCampaignCustomerLinksForCustomer
 };

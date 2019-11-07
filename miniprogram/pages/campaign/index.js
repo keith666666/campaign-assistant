@@ -17,17 +17,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    let self = this;
-    const _openid = app.globalData.customer._openid
-    campaignHeler.getCampaignsForCustomer(_openid, (err, campaigns) => {
-      if (err) {
-        console.log(err);
-      } else {
-        self.setData({
-          campaigns
-        })
-      }
-    });
+
   },
 
   goInfo(e) {
@@ -48,7 +38,17 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    let self = this;
+    campaignHeler.getCampaignCustomerLinksForCustomer((err, campaignCustomerLinks) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(JSON.stringify(campaignCustomerLinks));
+        self.setData({
+          campaigns: campaignCustomerLinks
+        })
+      }
+    });
   },
 
   /**
