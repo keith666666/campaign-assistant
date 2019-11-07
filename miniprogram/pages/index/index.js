@@ -24,6 +24,11 @@ Page({
     requestResult: '',
     latitude: 39.91256332397461,
     longitude: 116.45120239257812,
+    showCouponInfo: false,
+    activeName: '',
+    couponDiscount: 0,
+    couponTime: '',
+
 
     markers: [{
       id: 0,
@@ -238,7 +243,7 @@ Page({
                 wx.hideLoading();
                 wx.showModal({
                   title: '提示',
-                  content: '您已经打卡，无需再打卡。',
+                  content: '您已经领取折扣，无需再打卡。',
                 })
                 return
               }
@@ -252,9 +257,16 @@ Page({
                 },
                 success: async (res) => {
                   wx.hideLoading();
-                  wx.showModal({
-                    title: '提示',
-                    content: '打卡成功，已发放优惠券',
+                  // wx.showModal({
+                  //   title: '提示',
+                  //   content: '打卡成功，已发放优惠券',
+                  // })
+                  console.log(resFirst)
+                  this.setData({
+                    activeName: resFirst.name,
+                    couponDiscount: resFirst.result.data.discount,
+                    couponTime: resFirst.created.slice(0, 10),
+                    showCouponInfo: true,
                   })
 
                   // 活动参加人数加1
@@ -271,6 +283,7 @@ Page({
                 }
               })
             } else {
+              wx.hideLoading()
               wx.showModal({
                 title: '提示',
                 content: '打卡失败，请到指定区域范围内打卡，并扫描带有活动关键字的图片。',
@@ -292,6 +305,12 @@ Page({
           }
         })
       }
+    })
+  },
+
+  closeCouponInfo(){
+    this.setData({
+      showCouponInfo: false
     })
   },
 
