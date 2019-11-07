@@ -1,4 +1,33 @@
 /* miniprogram/pages/merchant/campaign/detail/index.wxss */
+.weui-cell__bd{
+  margin-top: 30rpx;
+}
+.ct_form_wrapper{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.ct_form{
+  background: white;
+  flex: 1;
+  margin: 20rpx 30rpx;
+}
+.ct_tr{
+  display: flex;
+  margin: 0 20rpx;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #ccc;
+}
+.ct_tr.last{
+  border-bottom: 0;
+}
+.td_lb{
+  flex: 1;
+}
+.td{
+  flex: 2;
+}
+
 .ct_dialog{
   position: absolute;
   width: 100%;
