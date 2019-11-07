@@ -1,8 +1,8 @@
 <!--index.wxml-->
 <view class="container">
-
-  <!-- 用户 openid -->
-  <!-- <view class="userinfo">
+  <view class="ct_main">
+    <!-- 用户 openid -->
+    <!-- <view class="userinfo">
     <button 
       open-type="getUserInfo" 
       bindgetuserinfo="onGetUserInfo"
@@ -13,29 +13,15 @@
       <button class="userinfo-nickname" bindtap="onGetOpenid">点击获取 openid</button>
     </view>
   </view> -->
-  <view class="ocr-btn">
-    <button type="primary" bindtap="handleOcr"> 扫描图片打卡 </button>
+    <view class="ocr-btn">
+      <button type="primary" bindtap="handleOcr"> 扫描图片打卡 </button>
+    </view>
+
+    <view>
+      <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" scale="14" controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}" circles="{{circles}}" bindmarkertap="markertap" polyline="{{polyline}}" bindregionchange="regionchange"
+        show-location style="height: 300px;"></map>
+    </view>
+
+    <button type="primary" class="btn_merchant" style="margin-top: 10px;" size="mini" bindtap="goMerchant"> 商家入口 </button>
   </view>
-
-  <view>
-    <map
-      id="map"
-      longitude="{{longitude}}"
-      latitude="{{latitude}}"
-      scale="14"
-      controls="{{controls}}"
-      bindcontroltap="controltap"
-      markers="{{markers}}"
-      circles="{{circles}}"
-      bindmarkertap="markertap"
-      polyline="{{polyline}}"
-      bindregionchange="regionchange"
-      show-location
-      style="height: 300px;"
-    ></map>
-  </view>
-
-  <button type="primary" style="margin-top: 10px;" size="mini" bindtap="goMerchant"> 商家入口 </button>
-
-
 </view>

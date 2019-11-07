@@ -119,7 +119,7 @@ Page({
     this.mapCtx = wx.createMapContext('map')
   },
 
-  onShow: function(){
+  onShow: function () {
     // wx.getShareInfo({
     //   shareTicket: 'fenxiang',
     //   timeout: 1000,
@@ -165,13 +165,13 @@ Page({
     console.log('分享成功')
   },
 
-  goMerchant: function() {
+  goMerchant: function () {
     wx.navigateTo({
       url: '/pages/merchant/index/index',
     })
   },
 
-  handleOcr: function() {
+  handleOcr: function () {
     wx.chooseImage({
       count: 1,
       sizeType: ['compressed'],
@@ -179,7 +179,7 @@ Page({
       success: (res) => {
         wx.showLoading({
           title: '扫描识别中',
-        })
+        });
 
         const filePath = res.tempFilePaths[0]
 
@@ -219,12 +219,13 @@ Page({
               )
 
               if (distance * 1000 > centerRadius) {
+                wx.hideLoading();
                 wx.showToast({
                   title: '请到指定地点扫描打卡',
                 })
                 return
               }
-              
+
 
               const resultId = `${Date.now()}-${Math.random().toString(36).substr(2)}`
 
@@ -234,6 +235,7 @@ Page({
               }).get()
 
               if (ifExits.data && ifExits.data.length) {
+                wx.hideLoading();
                 wx.showModal({
                   title: '提示',
                   content: '您已经打卡，无需再打卡。',
@@ -249,6 +251,7 @@ Page({
                   created: db.serverDate()
                 },
                 success: async (res) => {
+                  wx.hideLoading();
                   wx.showModal({
                     title: '提示',
                     content: '打卡成功，已发放优惠券',
@@ -262,7 +265,10 @@ Page({
                     }
                   })
                 },
-                fail: console.error
+                fail: err => {
+                  wx.hideLoading()
+                  console.error(err);
+                }
               })
             } else {
               wx.showModal({
@@ -274,6 +280,7 @@ Page({
 
           },
           fail: e => {
+            wx.hideLoading();
             console.error('[上传文件] 失败：', e)
             wx.showToast({
               icon: 'none',
@@ -281,21 +288,21 @@ Page({
             })
           },
           complete: () => {
-            wx.hideLoading()
+            // wx.hideLoading()
           }
         })
       }
     })
   },
 
-  getDistance(lat1, lng1, lat2, lng2){
+  getDistance(lat1, lng1, lat2, lng2) {
     const radLat1 = lat1 * Math.PI / 180.0;
     const radLat2 = lat2 * Math.PI / 180.0;
     const a = radLat1 - radLat2;
     const b = lng1 * Math.PI / 180.0 - lng2 * Math.PI / 180.0;
     let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) +
       Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
-    s = s * 6378.137 ;// EARTH_RADIUS;
+    s = s * 6378.137;// EARTH_RADIUS;
     s = Math.round(s * 10000) / 10000;
     return s;
   },

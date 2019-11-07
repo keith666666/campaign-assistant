@@ -48,3 +48,6 @@
   margin-right: 20rpx;
   color: red;
 }
+.btn{
+  margin: 20rpx;
+}

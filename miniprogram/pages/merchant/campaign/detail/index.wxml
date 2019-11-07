@@ -35,8 +35,8 @@
         <switch class="td" checked="{{campaign.enabled}}" bindchange="onSwitchChange" />
       </view>
     </view>
-    <button type="primary" catchtap="onSave">保存</button>
-    <button type="warn" catchtap="onDelete" hidden="{{mode==='create'}}">删除</button>
+    <button class="btn" type="primary" catchtap="onSave">保存</button>
+    <button class="btn" type="warn" catchtap="onDelete" hidden="{{mode==='create'}}">删除</button>
   </view>
   <!-- <view class="ct_dialog">
     <view class="dialog">

@@ -1,7 +1,7 @@
 /**index.wxss**/
 
 page {
-  background: #f6f6f6;
+  background: #ededed;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -136,7 +136,12 @@ page {
   word-break: break-all;
 }
 
+.ocr-btn {
+  margin: 100rpx 0 150rpx 0;
+}
 
-.ocr-btn{
-  margin: 30px 0;
+.btn_merchant {
+  position: absolute;
+  bottom: 10rpx;
+  right: 10rpx;
 }
