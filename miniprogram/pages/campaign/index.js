@@ -40,7 +40,11 @@ Page({
    */
   onShow: function () {
     let self = this;
+    wx.showLoading({
+      title: '加载中',
+    });
     campaignHeler.getCampaignCustomerLinksForCustomer((err, campaignCustomerLinks) => {
+      wx.hideLoading();
       if (err) {
         console.log(err);
       } else {
