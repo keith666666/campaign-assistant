@@ -1,0 +1,6 @@
+<view class="container">
+  <view>{{campaignInfo.name}}</view>
+  <view>目前参加总人数：{{campaignInfo.joinedNumber}}</view>
+  <view>地点：{{campaignInfo.conditions[1].data.name}}</view>
+  <view>活动详情：略</view>
+</view>

@@ -11,6 +11,10 @@ const _ = db.command
 const campaignCustomerLink = db.collection('campaign-customer-link')
 const campaign = db.collection('campaign')
 
+// wx.showShareMenu({
+//   withShareTicket: true
+// })
+
 Page({
   data: {
     avatarUrl: './user-unlogin.png',
@@ -115,6 +119,17 @@ Page({
     this.mapCtx = wx.createMapContext('map')
   },
 
+  onShow: function(){
+    // wx.getShareInfo({
+    //   shareTicket: 'fenxiang',
+    //   timeout: 1000,
+    //   success: function(res) {
+    //     console.log(res)
+    //   },
+    //   fail: function() {},
+    // })
+  },
+
   onGetUserInfo: function (e) {
     if (!this.data.logged && e.detail.userInfo) {
       this.setData({
@@ -146,25 +161,11 @@ Page({
     })
   },
 
-  handleOcr: function() {
-    console.log(app.globalData)
-    // const date = new Date()
-    // timeHelpe.formatTime(date)
-    const customerId = app.globalData.customer ? app.globalData.customer._id : 'all'
-    // const distance = this.getDistance(
-    //   this.data.latitude,
-    //   this.data.longitude,
-    //   localLatitude,
-    //   localLongitude
-    // )
-    // console.log('distance', distance)
-    // if (distance > 2) {
-    //   wx.showToast({
-    //     title: '请到指定地点扫描打卡',
-    //   })
-    //   return
-    // }
+  onShareAppMessage: function () {
+    console.log('分享成功')
+  },
 
+  handleOcr: function() {
     wx.chooseImage({
       count: 1,
       sizeType: ['compressed'],
@@ -179,6 +180,7 @@ Page({
         // 上传图片
         const filename = `${Date.now()}-${Math.random().toString(36).substr(2)}`;
         const fileExtension = filePath.split('.').pop() || '.png';
+        const customerId = app.globalData.customer ? app.globalData.customer._id : 'all'
         const cloudPath = `customers/${customerId}/${filename}.${fileExtension}`
         wx.cloud.uploadFile({
           cloudPath,
@@ -237,7 +239,8 @@ Page({
                 data: {
                   customerId,
                   campaignId,
-                  resultId
+                  resultId,
+                  created: db.serverDate()
                 },
                 success: async (res) => {
                   wx.showModal({
