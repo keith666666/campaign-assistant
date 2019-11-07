@@ -1,0 +1,13 @@
+/* miniprogram/pages/about/about.wxss */
+
+.campaign-list{
+  background-color: #fff;
+  margin: 0px auto 1px; 
+  width: 95%;
+  height: 40px;
+  line-height: 40px;
+  box-sizing: border-box;
+  padding-left: 10px;
+  color: #666;
+  font-size: 12px; 
+}

@@ -1,0 +1,11 @@
+
+<view class="container">
+  <view
+    wx:for="{{campaigns}}"
+    wx:key="{{index}}"
+    data-id="{{item._id}}"
+    bindtap="goInfo"
+    class="campaign-list">
+      活动：{{item.name}}
+  </view>
+</view>
