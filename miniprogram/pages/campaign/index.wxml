@@ -1,7 +1,7 @@
 <view class="container">
   <view class="weui-cell__bd">所有活动</view>
   <block wx:for="{{campaignCustomerLinks}}">
-    <view class="ct_campaigns">
+    <view class="ct_campaigns" data-index="{{index}}" catchtap="onItemTap">
       <view class="ct_campaign_items">
         <view class="ct_campaign">
           <view>

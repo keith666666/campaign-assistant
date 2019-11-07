@@ -88,5 +88,14 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  onItemTap(event) {
+    console.log(event);
+    let { currentTarget: { dataset: { index } } } = event;
+    let link = this.data.campaignCustomerLinks[index];
+    let linkJson = JSON.stringify(link);
+    wx.navigateTo({
+      url: '/pages/campaignInfo/index?link=' + linkJson
+    });
   }
 })
