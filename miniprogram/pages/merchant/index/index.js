@@ -53,9 +53,14 @@ Page({
    */
   onLoad: function (options) {
     let self = this;
+    wx.showLoading({
+      title: '加载中',
+    });
     indexController.login('merchant', (err, user) => {
-      if (err) console.log(err);
-      else {
+      if (err) {
+        console.log(err);
+        wx.hideLoading();
+      } else {
         app.globalData.merchant = user;
         console.log(user);
         // todo: remove it
@@ -65,6 +70,7 @@ Page({
         // });
         // return;
         campaignController.getCampaigns((err, campaigns) => {
+          wx.hideLoading();
           if (err) console.log(err);
           else {
             console.log(JSON.stringify(campaigns));
